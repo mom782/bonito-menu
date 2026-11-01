@@ -1,0 +1,267 @@
+
+
+```html
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bonito - Coffee & Good Vibes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+    body { font-family: 'Tajawal', sans-serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-amber-50/40 text-stone-800 pb-24 min-h-screen">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-30 bg-stone-900 text-amber-50 shadow-md">
+    <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-amber-600 flex items-center justify-center text-xl font-extrabold text-white shadow">
+          ☕
+        </div>
+        <div>
+          <h1 class="font-bold text-lg leading-tight tracking-wide">BONITO</h1>
+          <p class="text-xs text-amber-400/80">Coffee & Good Vibes</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="toggleModal('wifi-modal')" class="p-2 rounded-full bg-stone-800 hover:bg-stone-700 text-amber-400 text-sm transition">
+          <i class="fa-solid fa-wifi"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="max-w-md mx-auto px-4 pb-3">
+      <div class="relative">
+        <input type="text" id="search-input" oninput="filterItems()" placeholder="قلب على شي مشروب..." class="w-full bg-stone-800 text-stone-100 placeholder-stone-400 text-sm rounded-xl py-2 pr-9 pl-4 focus:outline-none focus:ring-2 focus:ring-amber-500">
+        <i class="fa-solid fa-magnifying-glass absolute right-3 top-2.5 text-stone-400 text-sm"></i>
+      </div>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="max-w-md mx-auto px-4 flex gap-2 overflow-x-auto no-scrollbar pb-3" id="categories-container">
+      <!-- Generated via JS -->
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-md mx-auto px-4 pt-4">
+    <!-- Menu Grid -->
+    <div id="menu-grid" class="space-y-3">
+      <!-- Items generated via JS -->
+    </div>
+  </main>
+
+  <!-- Bottom Order Bar -->
+  <div class="fixed bottom-0 left-0 right-0 bg-stone-900 border-t border-stone-800 p-3 z-30 shadow-lg">
+    <div class="max-w-md mx-auto flex items-center justify-between">
+      <div>
+        <p class="text-xs text-stone-400">المجموع التقديري</p>
+        <p class="text-lg font-bold text-amber-400" id="total-price">0 DH</p>
+      </div>
+      <button onclick="toggleModal('cart-modal')" class="bg-amber-600 hover:bg-amber-500 text-white font-bold py-2 px-5 rounded-xl text-sm flex items-center gap-2 transition shadow-md">
+        <i class="fa-solid fa-receipt"></i>
+        <span>الطلب ديالك (<span id="cart-count">0</span>)</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Wi-Fi Modal -->
+  <div id="wifi-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-xs w-full p-5 text-center shadow-2xl relative">
+      <button onclick="toggleModal('wifi-modal')" class="absolute top-3 left-3 text-stone-400 hover:text-stone-600">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+      <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mx-auto mb-3 text-xl">
+        <i class="fa-solid fa-wifi"></i>
+      </div>
+      <h3 class="font-bold text-stone-800 text-lg mb-1">Wi-Fi Bonito</h3>
+      <p class="text-xs text-stone-500 mb-4">مرحبا بك! استخدم معلومات الشبكة للاتصال</p>
+      <div class="bg-stone-100 p-3 rounded-xl text-right text-xs space-y-2 mb-4">
+        <div class="flex justify-between">
+          <span class="text-stone-500">اسم الشبكة:</span>
+          <span class="font-bold text-stone-800">Bonito_Cafe_Guest</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-stone-500">كلمة السر:</span>
+          <span class="font-bold text-stone-800">bonito2026</span>
+        </div>
+      </div>
+      <button onclick="toggleModal('wifi-modal')" class="w-full bg-stone-900 text-white font-bold py-2 rounded-xl text-xs">سد النافذة</button>
+    </div>
+  </div>
+
+  <!-- Cart / Order Summary Modal -->
+  <div id="cart-modal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div class="bg-white rounded-t-2xl sm:rounded-2xl max-w-md w-full p-5 shadow-2xl relative max-h-[80vh] flex flex-col">
+      <div class="flex justify-between items-center mb-4 pb-2 border-b">
+        <h3 class="font-bold text-stone-800 text-base flex items-center gap-2">
+          <i class="fa-solid fa-list-check text-amber-600"></i> تفاصيل الاختيار
+        </h3>
+        <button onclick="toggleModal('cart-modal')" class="text-stone-400 hover:text-stone-600">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div id="cart-items" class="overflow-y-auto space-y-3 flex-1 pr-1">
+        <!-- Cart items list -->
+      </div>
+
+      <div class="mt-4 pt-3 border-t">
+        <div class="flex justify-between text-base font-bold text-stone-800 mb-4">
+          <span>المجموع:</span>
+          <span id="modal-total-price" class="text-amber-600">0 DH</span>
+        </div>
+        <p class="text-xs text-stone-500 text-center mb-3">وري هذه القائمة للفرسون باش يسجل الطلب ديالك 👍</p>
+        <button onclick="toggleModal('cart-modal')" class="w-full bg-stone-900 text-white font-bold py-2.5 rounded-xl text-sm">رجوع للمينيو</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const categories = [
+      { id: 'all', name: 'الكل', icon: 'fa-border-all' },
+      { id: 'hot', name: 'مشروبات ساخنة', icon: 'fa-mug-hot' },
+      { id: 'cold', name: 'مشروبات باردة', icon: 'fa-glass-water' },
+      { id: 'sweets', name: 'حلويات ووافل', icon: 'fa-cookie-bite' },
+      { id: 'breakfast', name: 'فطور وساندويتش', icon: 'fa-bread-slice' }
+    ];
+
+    const menuData = [
+      { id: 1, category: 'hot', name_ar: 'إكسبريسو (Espresso)', name_fr: 'Café Espresso', price: 12, desc: 'قهوة غنية ومركزة 100% أرابيكا', image: 'https://images.unsplash.com/photo-1510591509098-f4fdc6d0ff04?w=300&q=80' },
+      { id: 2, category: 'hot', name_ar: 'قهوة بالحليب (Café Crème)', name_fr: 'Café au Lait', price: 14, desc: 'إكسبريسو كلاسيكي مع حليب ساخن ورغوة خفيفة', image: 'https://images.unsplash.com/photo-1534778101976-62847782c213?w=300&q=80' },
+      { id: 3, category: 'hot', name_ar: 'كابوتشينو (Cappuccino)', name_fr: 'Cappuccino', price: 18, desc: 'مزاج ممتاز مع رغوة الحليب ورشة كاكاو', image: 'https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=300&q=80' },
+      { id: 4, category: 'hot', name_ar: 'أتاي مغربي بالنعناع', name_fr: 'Thé Marocain', price: 13, desc: 'أتاي مشحر على حقه وطريقه', image: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=300&q=80' },
+      { id: 5, category: 'cold', name_ar: 'عصير برتقال طازج', name_fr: 'Jus d\'Orange Frais', price: 16, desc: 'معصور في الحين 100% طبيعي', image: 'https://images.unsplash.com/photo-1613478223719-2ab802602423?w=300&q=80' },
+      { id: 6, category: 'cold', name_ar: 'موهيتو منعش (Mojito)', name_fr: 'Mojito Classique', price: 22, desc: 'ليمون حامض، نعناع طري وصودا مع ثلج مهروش', image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=300&q=80' },
+      { id: 7, category: 'cold', name_ar: 'آيس لاتيه (Iced Latte)', name_fr: 'Iced Coffee', price: 22, desc: 'قهوة باردة مع حليب ومكعبات ثلج', image: 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=300&q=80' },
+      { id: 8, category: 'sweets', name_ar: 'وافل بالنوتيلا والفواكه', name_fr: 'Gaufre Nutella', price: 25, desc: 'وافل مقرمش مع شوكولاتة نوتيلا وقطع الموز', image: 'https://images.unsplash.com/photo-1562376552-0d160a2f238d?w=300&q=80' },
+      { id: 9, category: 'sweets', name_ar: 'بان كيك بالعسل (Pancakes)', name_fr: 'Pancakes au Miel', price: 22, desc: 'طبقات بان كيك هشة مع العسل والزبدة', image: 'https://images.unsplash.com/photo-1528207776546-365bb710ee93?w=300&q=80' },
+      { id: 10, category: 'breakfast', name_ar: 'وجبة إفطار بونيتو الكاملة', name_fr: 'Petit-Déjeuner Bonito', price: 32, desc: 'مشروب ساخن + عصير برتقال + كرواسون + زبدة ومربى', image: 'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=300&q=80' },
+      { id: 11, category: 'breakfast', name_ar: 'توست بالجبن والديك الرومي', name_fr: 'Toast Dinde & Fromage', price: 20, desc: 'خبز توست محمص مع جبن دائب وديك رومي مدخن', image: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=300&q=80' }
+    ];
+
+    let activeCategory = 'all';
+    let cart = {};
+
+    function initCategories() {
+      const container = document.getElementById('categories-container');
+      container.innerHTML = categories.map(cat => `
+        <button onclick="setCategory('${cat.id}')" id="cat-btn-${cat.id}" class="px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition flex items-center gap-1.5 ${activeCategory === cat.id ? 'bg-amber-500 text-stone-900 shadow' : 'bg-stone-800 text-stone-300 hover:bg-stone-700'}">
+          <i class="fa-solid ${cat.icon}"></i>
+          <span>${cat.name}</span>
+        </button>
+      `).join('');
+    }
+
+    function setCategory(catId) {
+      activeCategory = catId;
+      initCategories();
+      filterItems();
+    }
+
+    function filterItems() {
+      const query = document.getElementById('search-input').value.toLowerCase();
+      const filtered = menuData.filter(item => {
+        const matchesCategory = activeCategory === 'all' || item.category === activeCategory;
+        const matchesSearch = item.name_ar.toLowerCase().includes(query) || item.name_fr.toLowerCase().includes(query);
+        return matchesCategory && matchesSearch;
+      });
+      renderMenu(filtered);
+    }
+
+    function renderMenu(items) {
+      const grid = document.getElementById('menu-grid');
+      if (items.length === 0) {
+        grid.innerHTML = `<div class="text-center py-10 text-stone-400 text-sm">ما لقينا حتا عنصر بهذا الاسم 😅</div>`;
+        return;
+      }
+
+      grid.innerHTML = items.map(item => {
+        const count = cart[item.id] || 0;
+        return `
+          <div class="bg-white rounded-2xl p-3 shadow-sm border border-stone-100 flex gap-3 items-center">
+            <img src="${item.image}" alt="${item.name_ar}" class="w-20 h-20 rounded-xl object-cover flex-shrink-0 bg-stone-100">
+            <div class="flex-1 min-w-0">
+              <h4 class="font-bold text-stone-800 text-sm truncate">${item.name_ar}</h4>
+              <p class="text-[11px] text-stone-400 truncate mb-1">${item.name_fr}</p>
+              <p class="text-xs text-stone-500 line-clamp-1 mb-2">${item.desc}</p>
+              <div class="flex items-center justify-between">
+                <span class="font-extrabold text-amber-600 text-sm">${item.price} DH</span>
+                <div class="flex items-center gap-2 bg-stone-100 rounded-lg p-1">
+                  ${count > 0 ? `
+                    <button onclick="updateCart(${item.id}, -1)" class="w-6 h-6 rounded-md bg-white text-stone-700 shadow-sm flex items-center justify-center font-bold text-xs">-</button>
+                    <span class="text-xs font-bold px-1">${count}</span>
+                  ` : ''}
+                  <button onclick="updateCart(${item.id}, 1)" class="w-6 h-6 rounded-md bg-amber-600 text-white shadow-sm flex items-center justify-center font-bold text-xs">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateCart(id, change) {
+      cart[id] = (cart[id] || 0) + change;
+      if (cart[id] <= 0) delete cart[id];
+      filterItems();
+      updateCartSummary();
+    }
+
+    function updateCartSummary() {
+      let total = 0;
+      let count = 0;
+
+      Object.keys(cart).forEach(id => {
+        const item = menuData.find(i => i.id == id);
+        if (item) {
+          total += item.price * cart[id];
+          count += cart[id];
+        }
+      });
+
+      document.getElementById('total-price').innerText = `${total} DH`;
+      document.getElementById('modal-total-price').innerText = `${total} DH`;
+      document.getElementById('cart-count').innerText = count;
+
+      const cartItemsContainer = document.getElementById('cart-items');
+      if (count === 0) {
+        cartItemsContainer.innerHTML = `<p class="text-center text-stone-400 py-6 text-xs">مازال ما اخترتي والو 😊</p>`;
+      } else {
+        cartItemsContainer.innerHTML = Object.keys(cart).map(id => {
+          const item = menuData.find(i => i.id == id);
+          return `
+            <div class="flex items-center justify-between bg-stone-50 p-2.5 rounded-xl text-xs">
+              <div>
+                <p class="font-bold text-stone-800">${item.name_ar}</p>
+                <p class="text-stone-400">${item.price} DH x ${cart[id]}</p>
+              </div>
+              <span class="font-bold text-amber-600">${item.price * cart[id]} DH</span>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    function toggleModal(id) {
+      const modal = document.getElementById(id);
+      modal.classList.toggle('hidden');
+    }
+
+    // Init
+    initCategories();
+    filterItems();
+  </script>
+</body>
+</html>
+
+```
+
